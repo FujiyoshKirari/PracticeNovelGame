@@ -20,7 +20,14 @@ public class ScenarioRunner : MonoBehaviour
             int count = 1;
             foreach(var line in lines)
             {
-                Debug.Log($"{count}: {line}");
+                var t = $"{line.LineNumber}s–Ú | [{line.Name}]";
+
+                foreach(var arg in line.Args)
+                {
+                    t += $" [{arg}]";
+                }
+
+                Debug.Log(t);
                 count++;
             }
         }
