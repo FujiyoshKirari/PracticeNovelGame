@@ -2,16 +2,17 @@ using System.Collections.Generic;
 
 public static class ScenarioParser
 {
-    public static List<ScenarioCommand> ParseLines(string text)
+    public static List<ScenarioCommand> ParseLines(string text, char separator = '\t')
     {
-        var lines = text.Split('\n');
+        var trimmedBom = text.TrimStart('\uFEFF');
+        var lines = trimmedBom.Split('\n');
         var result = new List<ScenarioCommand>();
 
         var argsList = new List<string>();
 
         for (int i = 0; i < lines.Length; i++)
         {
-            var splitNameLine = lines[i].Split('\t');
+            var splitNameLine = lines[i].Split(separator);
             var firstString = splitNameLine[0].Trim();
 
             if (firstString.StartsWith('#')) continue;

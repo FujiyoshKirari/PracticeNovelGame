@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ScenarioRunner : MonoBehaviour
 {
-    [SerializeField] private string _url = "https://fujiyoshkirari.github.io/PracticeNovelGame/scenario.txt";
+    [SerializeField] private string _url = "https://fujiyoshkirari.github.io/PracticeNovelGame/scenario.csv";
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() => RunAsync(destroyCancellationToken).Forget();
@@ -15,12 +15,15 @@ public class ScenarioRunner : MonoBehaviour
         {
             IScenarioSource scenarioSource = new WebScenarioSource(_url);
             var text = await scenarioSource.LoadAsync(ct);
-            var lines = ScenarioParser.ParseLines(text);
+            var commands = ScenarioParser.ParseLines(text, ',');
 
             int count = 1;
-            foreach(var line in lines)
+
+            Debug.Log(commands?[0].Name == "bg");
+
+            foreach(var line in commands)
             {
-                var t = $"{line.LineNumber}çsñ⁄ | [{line.Name}]";
+                var t = $"{line.LineNumber}Ë°åÁõÆ | [{line.Name}]";
 
                 foreach(var arg in line.Args)
                 {

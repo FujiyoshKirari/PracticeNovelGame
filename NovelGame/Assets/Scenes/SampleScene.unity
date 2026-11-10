@@ -285,7 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e5e4b7633d73e34dab241ac6b8690aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScenarioRunner
-  _url: https://fujiyoshkirari.github.io/PracticeNovelGame/scenario.txt
+  _url: https://fujiyoshkirari.github.io/PracticeNovelGame/scenario.csv
 --- !u!4 &522026002
 Transform:
   m_ObjectHideFlags: 0
