@@ -1,0 +1,16 @@
+{
+    "name": "MyDI.Unity",
+    "rootNamespace": "",
+    "references": [
+        "GUID:41c417eedba10554e9901dce01f447f3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

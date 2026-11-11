@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace MyDIContainer
 {
@@ -37,9 +38,14 @@ namespace MyDIContainer
     {
         private readonly Dictionary<Type, Registration> _registers;
 
-        internal Container(Dictionary<Type, Registration> registers)
+        internal Container(Dictionary<Type, Registration> registers, List<object> needInjectObjects)
         {
             _registers = registers;
+
+            foreach (object obj in needInjectObjects)
+            {
+                Inject(obj);
+            }
         }
 
         /// <summary>
@@ -100,8 +106,38 @@ namespace MyDIContainer
             var constructor = type.GetConstructors()[0];
 
             var parameters = constructor.GetParameters();
+            object[] args = GetParameterArgs(parameters);
+            var instance = constructor.Invoke(args);
+            return instance;
+        }
 
-            object[] args = new object[parameters.Length];
+        public void Inject(object target)
+        {
+            var type = target.GetType();
+            var methods = type.GetMethods(
+                BindingFlags.Instance |
+                BindingFlags.Public |
+                BindingFlags.NonPublic);
+
+            foreach (var method in methods)
+            {
+                if (method.IsDefined(typeof(InjectAttribute), false))
+                {
+                    var parameters = method.GetParameters();
+                    var args = GetParameterArgs(parameters);
+                    method.Invoke(target, args);
+                }
+            }
+        }
+
+        /// <summary>
+        /// メソッドのパラメーターを渡すとパラメーターの要素を返す
+        /// </summary>
+        /// <param name="parameters">メソッドのパラメーター</param>
+        /// <returns></returns>
+        private object[] GetParameterArgs(ParameterInfo[] parameters)
+        {
+            var args = new object[parameters.Length];
 
             for (int i = 0; i < parameters.Length; i++)
             {
@@ -109,9 +145,7 @@ namespace MyDIContainer
                 var p = Resolve(parameterType);
                 args[i] = p;
             }
-
-            var instance = constructor.Invoke(args);
-            return instance;
+            return args;
         }
     }
 }

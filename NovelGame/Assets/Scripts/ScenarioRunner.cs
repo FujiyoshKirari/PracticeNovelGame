@@ -1,20 +1,26 @@
 using Cysharp.Threading.Tasks;
+using MyDIContainer;
 using System.Threading;
 using UnityEngine;
 
 public class ScenarioRunner : MonoBehaviour
 {
-    [SerializeField] private string _url = "https://fujiyoshkirari.github.io/PracticeNovelGame/scenario.csv";
+    private IScenarioSource _scenarioSource;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() => RunAsync(destroyCancellationToken).Forget();
+
+    [Inject]
+    private void Construct(IScenarioSource scenarioSource)
+    {
+        _scenarioSource = scenarioSource;
+    }
 
     private async UniTask RunAsync(CancellationToken ct)
     {
         try
         {
-            IScenarioSource scenarioSource = new WebScenarioSource(_url);
-            var text = await scenarioSource.LoadAsync(ct);
+            var text = await _scenarioSource.LoadAsync(ct);
             var commands = ScenarioParser.ParseLines(text, ',');
 
             int count = 1;

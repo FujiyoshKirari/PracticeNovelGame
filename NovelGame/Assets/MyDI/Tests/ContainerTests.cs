@@ -1,8 +1,6 @@
 using System;
-using System.Runtime.Remoting.Lifetime;
 using MyDIContainer;
 using NUnit.Framework;
-using UnityEditor.VersionControl;
 
 namespace TestContainer
 {
@@ -16,6 +14,14 @@ namespace TestContainer
     {
         public IBar Bar { get; }
         public FooWithBar(IBar bar) { Bar  = bar; }
+    }
+
+    public class NeedsBar
+    {
+        public IBar Bar;
+
+        [InjectAttribute]
+        public void Construct(IBar bar) { Bar = bar; }
     }
 
     public interface IA { }
@@ -135,6 +141,67 @@ namespace TestContainer
             Assert.Throws<Exception>(() => builder.Register<IFoo, Foo>(Lifetime.Transient));   // Buildのあとで登録
 
             Assert.Throws<Exception>(() => container.Resolve<IFoo>());
+        }
+
+        [Test]
+        public void クラスで登録したらクラスで取り出せる()
+        {
+            var builder = new ContainerBuilder();
+            builder.Register<Foo>(Lifetime.Transient);
+            var container = builder.Build();
+
+            var foo = container.Resolve<Foo>();
+            Assert.IsInstanceOf<Foo>(foo);
+        }
+
+        [Test]
+        public void クラスで登録しただけではインターフェースでは取り出せない()
+        {
+            var builder = new ContainerBuilder();
+            builder.Register<Foo>(Lifetime.Transient);
+            var container = builder.Build();
+
+            var ex = Assert.Throws<Exception>(() => container.Resolve<IFoo>());
+            Assert.That(ex.Message, Does.Contain("IFoo"));
+        }
+
+        [Test]
+        public void Injectを付けたメソッドに依存が注入される()
+        {
+            var builder = new ContainerBuilder();
+            builder.Register<IBar, Bar>(Lifetime.Transient);
+            var container = builder.Build();
+
+            var target = new NeedsBar();
+            container.Inject(target);
+
+            Assert.IsInstanceOf<Bar>(target.Bar);
+        }
+
+        [Test]
+        public void RegisterInstanceしたオブジェクトにBuild時に注入される()
+        {
+            var builder = new ContainerBuilder();
+            builder.Register<IBar, Bar>(Lifetime.Transient);
+
+            var target = new NeedsBar();          // シーン上にすでにあるMonoBehaviourの代わり
+            builder.RegisterInstance(target);
+
+            builder.Build();
+
+            Assert.IsInstanceOf<Bar>(target.Bar);
+        }
+
+        [Test]
+        public void RegisterInstanceしたオブジェクトはResolveでそのものが返る()
+        {
+            var builder = new ContainerBuilder();
+            builder.Register<IBar, Bar>(Lifetime.Transient);
+            var target = new NeedsBar();
+            builder.RegisterInstance(target);
+            var container = builder.Build();
+
+            Assert.AreSame(target, container.Resolve<NeedsBar>());
         }
     }
 }

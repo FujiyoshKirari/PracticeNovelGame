@@ -3,6 +3,6 @@ using System.Threading;
 
 public interface IScenarioSource
 {
-    // �u�L�����Z���\�ŁA�ŏI�I��string��Ԃ��񓯊������v�Ƃ�����
+    // 「キャンセル可能で、最終的にstringを返す非同期処理」という約束
     UniTask<string> LoadAsync(CancellationToken ct);
 }
