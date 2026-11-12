@@ -1,33 +1,29 @@
 using Cysharp.Threading.Tasks;
 using MyDIContainer;
-using R3;
-using System.Collections.Generic;
+using System;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class ScenarioRunner : MonoBehaviour
 {
-    private IScenarioSource _scenarioSource;
-    private List<ScenarioCommand> _scenarioCommands;
     [SerializeField] private InputAction _action;
+    private IScenarioSource _scenarioSource;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private MessageWindow _messageWindow;
+
     void Start() => RunAsync(destroyCancellationToken).Forget();
 
     [Inject]
-    private void Construct(IScenarioSource scenarioSource)
+    private void Construct(IScenarioSource scenarioSource, MessageWindow messageWindow)
     {
         _scenarioSource = scenarioSource;
+        _messageWindow = messageWindow;
     }
 
     private void Awake()
     {
         _action?.Enable();
-        Observable.EveryUpdate()
-            .Where(_ => _action?.triggered == true)
-            .Subscribe(_ => OnButtonPressDown())
-            .AddTo(this);
     }
 
     private async UniTask RunAsync(CancellationToken ct)
@@ -35,23 +31,23 @@ public class ScenarioRunner : MonoBehaviour
         try
         {
             var text = await _scenarioSource.LoadAsync(ct);
-            _scenarioCommands = ScenarioParser.ParseLines(text, ',');
+            var scenarioCommands = ScenarioParser.ParseLines(text, ',');
 
-            int count = 1;
-
-            Debug.Log(_scenarioCommands?[0].Name == "bg");
-
-            foreach(var line in _scenarioCommands)
+            foreach(var command in scenarioCommands)
             {
-                var t = $"{line.LineNumber}行目 | [{line.Name}]";
+                var t = $"{command.LineNumber}行目 | [{command.Name}]";
 
-                foreach(var arg in line.Args)
+                foreach(var arg in command.Args)
                 {
                     t += $" [{arg}]";
                 }
 
                 Debug.Log(t);
-                count++;
+            }
+
+            foreach (var command in scenarioCommands)
+            {
+                await ExecuteCommand(command, ct);
             }
         }
         catch (UnityWebRequestException e)
@@ -60,8 +56,39 @@ public class ScenarioRunner : MonoBehaviour
         }
     }
 
-    private void OnButtonPressDown()
+    private async UniTask ExecuteCommand(ScenarioCommand command, CancellationToken ct)
     {
-        Debug.Log("Pressed");
+        switch (command?.Name)
+        {
+            case null:
+                throw new Exception("ScenarioCommandがnullでした");
+            case "text":
+                await ShowText(command, ct);
+                await UniTask.WaitUntil(() => _action.triggered, cancellationToken: ct);
+                break;
+
+            default:
+                Debug.LogWarning($"未対応のコマンド {command.Name}({command.LineNumber}行目)");
+                break;
+        }
+    }
+
+    private async UniTask ShowText(ScenarioCommand command, CancellationToken ct)
+    {
+        if (command?.Args?.Length >= 2)
+        {
+            var speaker = command.Args[0];
+            var body = command.Args[1];
+
+            await _messageWindow.Show(speaker, body, ct);
+        }
+        else if (command == null) 
+        {
+            throw new Exception("ScenarioCommandがnullで渡されました。");
+        }
+        else
+        {
+            throw new Exception($"{command.LineNumber}行目のテキストの要素数が足りません");
+        }
     }
 }

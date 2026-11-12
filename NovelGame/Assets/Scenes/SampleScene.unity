@@ -432,6 +432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NovelLifetimeScope
   _scenarioRunner: {fileID: 522026001}
   _url: https://fujiyoshkirari.github.io/PracticeNovelGame/scenario.csv
+  _messageWindow: {fileID: 1896082845}
 --- !u!4 &805738164
 Transform:
   m_ObjectHideFlags: 0
@@ -1030,6 +1031,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MessageWindow
   _nameText: {fileID: 1817236648}
   _messageText: {fileID: 817031143}
+  _duration: 0.1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
