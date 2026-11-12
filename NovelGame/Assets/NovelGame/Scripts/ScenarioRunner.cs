@@ -1,11 +1,16 @@
 using Cysharp.Threading.Tasks;
 using MyDIContainer;
+using R3;
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ScenarioRunner : MonoBehaviour
 {
     private IScenarioSource _scenarioSource;
+    private List<ScenarioCommand> _scenarioCommands;
+    [SerializeField] private InputAction _action;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() => RunAsync(destroyCancellationToken).Forget();
@@ -16,18 +21,27 @@ public class ScenarioRunner : MonoBehaviour
         _scenarioSource = scenarioSource;
     }
 
+    private void Awake()
+    {
+        _action?.Enable();
+        Observable.EveryUpdate()
+            .Where(_ => _action?.triggered == true)
+            .Subscribe(_ => OnButtonPressDown())
+            .AddTo(this);
+    }
+
     private async UniTask RunAsync(CancellationToken ct)
     {
         try
         {
             var text = await _scenarioSource.LoadAsync(ct);
-            var commands = ScenarioParser.ParseLines(text, ',');
+            _scenarioCommands = ScenarioParser.ParseLines(text, ',');
 
             int count = 1;
 
-            Debug.Log(commands?[0].Name == "bg");
+            Debug.Log(_scenarioCommands?[0].Name == "bg");
 
-            foreach(var line in commands)
+            foreach(var line in _scenarioCommands)
             {
                 var t = $"{line.LineNumber}行目 | [{line.Name}]";
 
@@ -44,5 +58,10 @@ public class ScenarioRunner : MonoBehaviour
         {
             Debug.LogError(e);
         }
+    }
+
+    private void OnButtonPressDown()
+    {
+        Debug.Log("Pressed");
     }
 }
