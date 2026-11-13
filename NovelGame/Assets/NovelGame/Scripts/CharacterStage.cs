@@ -35,6 +35,7 @@ public class CharacterStage : MonoBehaviour
                 throw new System.Exception($"{position} は設定されてません");
         }
 
+        Debug.Log(position);
         var splitName = name.Split('_');
 
         if (_showCharacterDict.TryGetValue(splitName[0], out var img))
