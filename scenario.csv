@@ -3,3 +3,4 @@ bg,room,
 text,,放課後の教室
 show,alice,center
 text,アリス,こんにちは。
+hide,alice,
