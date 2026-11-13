@@ -1,6 +1,18 @@
-# コメント,,
-bg,room,
-text,,放課後の教室
-show,alice,center
+# 動作確認用シナリオ
+bg,room
+text,,放課後の教室。
+show,alice,left
 text,アリス,こんにちは。
-hide,alice,
+show,carol,right
+text,キャロル,わたしも来たよ。
+show,alice_smile,left
+text,アリス,キャロル！来てくれたんだ。
+show,alice,center
+text,アリス,真ん中に移動してみるね。
+hide,carol
+text,,キャロルは帰っていった。
+bg,street
+text,,夕方の帰り道。
+text,アリス,今日は楽しかったね。
+show,nobody,left
+text,,ここは表示されないはず。

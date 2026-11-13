@@ -4,7 +4,6 @@ using LitMotion.Extensions;
 using NaughtyAttributes;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,13 +17,8 @@ public class CharacterStage : MonoBehaviour
 
     private Dictionary<string, Image> _showCharacterDict = new Dictionary<string, Image>();
 
-    private CancellationTokenSource _cts = new CancellationTokenSource();
-
-    public async UniTask Show(string name, Sprite sprite, string position)
+    public async UniTask Show(string name, Sprite sprite, string position, CancellationToken ct)
     {
-        _cts?.Cancel();
-        _cts = new CancellationTokenSource();
-
         Image image = null;
         switch (position)
         {
@@ -37,13 +31,15 @@ public class CharacterStage : MonoBehaviour
             case "right":
                 image = _right;
                 break;
+            default:
+                throw new System.Exception($"{position} は設定されてません");
         }
         image.sprite = sprite;
-        _showCharacterDict.Add(name, image);
+        _showCharacterDict[name] = image;
 
         try
         {
-            await PlayFadeAnimation(image, 0f, 1f, _fadeDuration, _cts.Token);
+            await PlayFadeAnimation(image, 0f, 1f, _fadeDuration, ct);
         }
         finally
         {
@@ -53,16 +49,13 @@ public class CharacterStage : MonoBehaviour
         }
     }
 
-    public async UniTask Hide(string name)
+    public async UniTask Hide(string name, CancellationToken ct)
     {
         if (_showCharacterDict.TryGetValue(name, out Image image))
         {
-            _cts?.Cancel();
-            _cts = new CancellationTokenSource();
-
             try
             {
-                await PlayFadeAnimation(image, 1f, 0f, _fadeDuration, _cts.Token);
+                await PlayFadeAnimation(image, 1f, 0f, _fadeDuration, ct);
                 _showCharacterDict.Remove(name);
             }
             finally
@@ -72,12 +65,17 @@ public class CharacterStage : MonoBehaviour
                 image.color = color;
             }
         }
+        else
+        {
+            Debug.LogWarning($"{name} は存在してませんでした。");
+        }
     }
 
     private async UniTask PlayFadeAnimation(Image target, float start, float end, float duration, CancellationToken ct)
     {
         await LMotion.Create(start, end, duration)
                      .BindToColorA(target)
-                     .AddTo(this);
+                     .AddTo(this)
+                     .ToUniTask(ct);
     }
 }

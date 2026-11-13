@@ -12,6 +12,7 @@ public class ScenarioRunner : MonoBehaviour
     private CharacterStage _characterStage;
     private ISpriteSource _spriteSource;
     private MessageWindow _messageWindow;
+    private BackgroundView _bgView;
 
     void Start() => RunAsync(destroyCancellationToken).Forget();
 
@@ -20,12 +21,14 @@ public class ScenarioRunner : MonoBehaviour
         IScenarioSource scenarioSource,
         MessageWindow messageWindow,
         CharacterStage characterStage,
-        ISpriteSource spriteSource)
+        ISpriteSource spriteSource,
+        BackgroundView bgView)
     {
         _scenarioSource = scenarioSource;
         _characterStage = characterStage;
         _spriteSource = spriteSource;
         _messageWindow = messageWindow;
+        _bgView = bgView;
     }
 
     private void Awake()
@@ -56,6 +59,8 @@ public class ScenarioRunner : MonoBehaviour
             {
                 await ExecuteCommand(command, ct);
             }
+
+            _messageWindow.Show("", "--- おわり ---");
         }
         catch (UnityWebRequestException e)
         {
@@ -88,6 +93,12 @@ public class ScenarioRunner : MonoBehaviour
             case "show":
                 await ShowImage(command, ct);
                 break;
+            case "hide":
+                await HideImage(command, ct);
+                break;
+            case "bg":
+                await SwitchBackground(command, ct);
+                break;
             default:
                 Debug.LogWarning($"未対応のコマンド {command.Name}({command.LineNumber}行目)");
                 break;
@@ -96,7 +107,7 @@ public class ScenarioRunner : MonoBehaviour
 
     private void ShowText(ScenarioCommand command, CancellationToken ct)
     {
-        if (CheckCommandArgsLength(command))
+        if (CheckCommandArgsLength(command, 2))
         {
             var speaker = command.Args[0];
             var body = command.Args[1];
@@ -107,18 +118,37 @@ public class ScenarioRunner : MonoBehaviour
 
     private async UniTask ShowImage(ScenarioCommand command, CancellationToken ct)
     {
-        if (CheckCommandArgsLength(command))
+        if (CheckCommandArgsLength(command, 2))
         {
             var name = command.Args[0];
             var position = command.Args[1];
             var sprite = await _spriteSource.LoadAsync("Characters/" + name, ct);
-            _characterStage.Show(name, sprite, position).Forget();
+            _characterStage.Show(name, sprite, position, ct).Forget();
         }
     }
 
-    private bool CheckCommandArgsLength(ScenarioCommand command)
+    private async UniTask HideImage(ScenarioCommand command, CancellationToken ct)
     {
-        if (command?.Args?.Length >= 2)
+        if (CheckCommandArgsLength(command, 1))
+        {
+            var name = command.Args[0];
+            await _characterStage.Hide(name, ct);
+        }
+    }
+
+    private async UniTask SwitchBackground(ScenarioCommand command, CancellationToken ct)
+    {
+        if (CheckCommandArgsLength(command, 1))
+        {
+            var name = command.Args[0];
+            var sprite = await _spriteSource.LoadAsync("Backgrounds/" + name, ct);
+            _bgView.SetImage(sprite);
+        }
+    }
+
+    private bool CheckCommandArgsLength(ScenarioCommand command, int needCount)
+    {
+        if (command?.Args?.Length >= needCount)
         {
             return true;
         }
@@ -128,7 +158,7 @@ public class ScenarioRunner : MonoBehaviour
         }
         else
         {
-            throw new Exception($"{command.LineNumber}行目のテキストの要素数が足りません");
+            throw new Exception($"{command.LineNumber}行目のテキストの引数の数が足りません");
         }
     }
 }
