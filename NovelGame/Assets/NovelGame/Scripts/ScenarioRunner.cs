@@ -43,18 +43,6 @@ public class ScenarioRunner : MonoBehaviour
             var text = await _scenarioSource.LoadAsync(ct);
             var scenarioCommands = ScenarioParser.ParseLines(text, ',');
 
-            foreach(var command in scenarioCommands)
-            {
-                var t = $"{command.LineNumber}行目 | [{command.Name}]";
-
-                foreach(var arg in command.Args)
-                {
-                    t += $" [{arg}]";
-                }
-
-                Debug.Log(t);
-            }
-
             foreach (var command in scenarioCommands)
             {
                 await ExecuteCommand(command, ct);
