@@ -5,9 +5,6 @@ TextureImporter:
   - first:
       213: -948241674604555147
     second: carol_0
-  - first:
-      213: -5264491810237314890
-    second: carol_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -119,10 +116,10 @@ TextureImporter:
       name: carol_0
       rect:
         serializedVersion: 2
-        x: 169
-        y: 548
-        width: 263
-        height: 263
+        x: 16
+        y: 0
+        width: 568
+        height: 769
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -133,28 +130,6 @@ TextureImporter:
       bones: []
       spriteID: 57459ff883b27d2f0800000000000000
       internalID: -948241674604555147
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: carol_1
-      rect:
-        serializedVersion: 2
-        x: 109
-        y: 0
-        width: 383
-        height: 521
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6b80adf4794c0f6b0800000000000000
-      internalID: -5264491810237314890
       vertices: []
       indices: 
       edges: []
@@ -174,7 +149,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       carol_0: -948241674604555147
-      carol_1: -5264491810237314890
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

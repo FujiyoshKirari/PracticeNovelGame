@@ -34,8 +34,24 @@ public class CharacterStage : MonoBehaviour
             default:
                 throw new System.Exception($"{position} は設定されてません");
         }
+
+        var splitName = name.Split('_');
+
+        if (_showCharacterDict.TryGetValue(splitName[0], out var img))
+        {
+            if (image != img)
+            {
+                await Hide(splitName[0], ct);
+            }
+        }
+
         image.sprite = sprite;
-        _showCharacterDict[name] = image;
+        _showCharacterDict[splitName[0]] = image;
+
+        if (image == img)
+        {
+            return;
+        }
 
         try
         {
@@ -51,12 +67,13 @@ public class CharacterStage : MonoBehaviour
 
     public async UniTask Hide(string name, CancellationToken ct)
     {
-        if (_showCharacterDict.TryGetValue(name, out Image image))
+        var splitName = name.Split('_');
+        if (_showCharacterDict.TryGetValue(splitName[0], out Image image))
         {
             try
             {
                 await PlayFadeAnimation(image, 1f, 0f, _fadeDuration, ct);
-                _showCharacterDict.Remove(name);
+                _showCharacterDict.Remove(splitName[0]);
             }
             finally
             {

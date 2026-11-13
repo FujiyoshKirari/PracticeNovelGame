@@ -14,5 +14,5 @@ text,,キャロルは帰っていった。
 bg,street
 text,,夕方の帰り道。
 text,アリス,今日は楽しかったね。
-show,nobody,left
-text,,ここは表示されないはず。
+show,alice,left
+show,alice_smile,center
