@@ -1,18 +1,91 @@
-# 動作確認用シナリオ
+# 第2話「星空カフェをつくろう」
+# ---- シーン1：放課後の教室 ----
 bg,room
-text,,放課後の教室。
-show,alice,left
-text,アリス,こんにちは。
-show,carol,right
-text,キャロル,わたしも来たよ。
-show,alice_smile,left
-text,アリス,キャロル！来てくれたんだ。
+text,,文化祭まで、あと三日。
+text,,放課後の教室には、まだ何も飾られていない。
 show,alice,center
-text,アリス,真ん中に移動してみるね。
-hide,carol
-text,,キャロルは帰っていった。
-bg,street
-text,,夕方の帰り道。
-text,アリス,今日は楽しかったね。
-show,alice,left
+text,アリス,うーん……どうしよう。
+text,アリス,クラスの出し物、まだ決まってないんだよね。
+show,bob,right
+text,ボブ,おーい、アリス。まだ悩んでるのか？
+text,アリス,だって、みんなの意見がバラバラなんだもん。
+text,ボブ,お化け屋敷、劇、焼きそば……たしかにまとまらないな。
+show,mimi,left
+text,ミミ,にゃっほー！　遅れてごめんね！
+text,ボブ,ミミ、また寝坊か？
+text,ミミ,ちがうよー。猫カフェの前で、ちょっとだけ立ち止まってたの。
+text,アリス,それ、ちょっとだけじゃないやつだ……。
+show,mimi_smile,left
+text,ミミ,えへへ。でもね、いいこと思いついたんだ！
+text,ミミ,カフェ！　わたしたちのクラスで、カフェをやろうよ！
 show,alice_smile,center
+text,アリス,カフェ……！　いいかも！
+text,ボブ,でも、ただのカフェじゃ、ほかのクラスとかぶらないか？
+show,alice,center
+text,アリス,そっか……。何か特別なものがあればいいんだけど。
+hide,bob
+show,sora,right
+text,ソラ,それなら、星はどう？
+text,アリス,ソラ！　いつからそこに？
+text,ソラ,最初からいたよ。窓のそばで、空を見てた。
+text,ソラ,教室を暗くして、天井いっぱいに星を飾るの。
+show,sora_smile,right
+text,ソラ,名前は「星空カフェ」。
+text,ミミ,すてき！　にゃんこ座もつくろう！
+text,アリス,にゃんこ座って、そんな星座あったっけ……？
+text,ミミ,これからつくるの！
+text,,こうして、わたしたちの出し物は「星空カフェ」に決まった。
+hide,mimi
+hide,sora
+hide,alice
+# ---- シーン2：次の日の公園 ----
+bg,park
+text,,次の日。わたしたちは、飾りに使う材料を探しに公園へ来ていた。
+show,kurumi,center
+text,クルミ,みなさーん、こっちです！
+text,クルミ,松ぼっくりと、きれいな葉っぱがたくさん落ちてますよ。
+show,alice,left
+text,アリス,クルミ、そのうさ耳フード、今日もかわいいね。
+show,kurumi_smile,center
+text,クルミ,えへへ、ありがとうございます！　お耳がぴょこぴょこするんです。
+show,carol,right
+text,キャロル,アリスー！　画用紙と金色の紙、買ってきたよ！
+text,アリス,キャロル、ありがとう！　これで星がつくれるね。
+show,kurumi,center
+text,クルミ,星って、何個くらいつくるんですか？
+text,キャロル,ソラは「百個」って言ってたよ。
+text,アリス,ひゃ、百個！？
+show,alice_smile,left
+text,アリス,……でも、みんなでやればなんとかなるよね。
+text,キャロル,そうそう！　手を動かせば、いつか終わる！
+text,,わたしたちは芝生にシートを広げて、星を切り抜きはじめた。
+text,,はさみの音と、ときどき聞こえる笑い声。
+text,,気づけば、空はすっかりオレンジ色になっていた。
+hide,carol
+hide,kurumi
+hide,alice
+# ---- シーン3：夜の帰り道 ----
+bg,night
+text,,帰り道。見上げると、本物の星がまたたいていた。
+show,sora,center
+text,ソラ,ほら、見て。今日はよく見える。
+show,alice,left
+text,アリス,わあ……きれい。
+text,ソラ,わたしね、ずっと思ってたんだ。
+text,ソラ,星って、ひとつひとつは小さいけど、たくさん集まると夜空いっぱいになるでしょ。
+text,ソラ,わたしたちのクラスも、そんな感じだったらいいなって。
+text,アリス,ソラ……。
+show,mimi,right
+text,ミミ,ふたりとも、置いていかないでよー！
+text,ミミ,星、あと三十個も残ってるんだからね！
+show,alice_smile,left
+text,アリス,あはは、そうだった！
+show,sora_smile,center
+text,ソラ,明日もがんばろう。……星空カフェ、きっと成功するよ。
+show,mimi_smile,right
+text,ミミ,うん！　にゃんこ座もね！
+hide,mimi
+hide,sora
+hide,alice
+text,,三日後。教室の天井には、百個の星と、ひとつだけ形のちょっと変な星座が輝いていた。
+text,,それはまた、別のお話。
