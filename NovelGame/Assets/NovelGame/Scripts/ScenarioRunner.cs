@@ -110,8 +110,15 @@ public class ScenarioRunner : MonoBehaviour
         {
             var name = command.Args[0];
             var position = command.Args[1];
-            var sprite = await _spriteSource.LoadAsync("Characters/" + name, ct);
-            await _characterStage.Show(name, sprite, position, ct);
+            try
+            {
+                var sprite = await _spriteSource.LoadAsync("Characters/" + name, ct);
+                await _characterStage.Show(name, sprite, position, ct);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex);
+            }
         }
     }
 
