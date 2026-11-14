@@ -726,6 +726,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NovelLifetimeScope
   _scenarioRunner: {fileID: 522026001}
   _url: https://fujiyoshkirari.github.io/PracticeNovelGame/scenario.csv
+  _spriteBaseUrl: https://fujiyoshkirari.github.io/PracticeNovelGame/Resources/
   _messageWindow: {fileID: 1896082845}
   _characterStage: {fileID: 185953621}
   _bgView: {fileID: 514845506}
